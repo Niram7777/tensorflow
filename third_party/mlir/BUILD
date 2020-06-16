@@ -92,7 +92,7 @@ cc_library(
         ":SideEffectInterfacesIncGen",
         ":Support",
         ":SymbolInterfacesIncGen",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -114,7 +114,7 @@ cc_library(
         ":Analysis",
         ":IR",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -132,7 +132,7 @@ cc_library(
     deps = [
         ":IR",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -149,7 +149,7 @@ cc_library(
         ":IR",
         ":Parser",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -284,8 +284,8 @@ cc_library(
         ":IR",
         ":SideEffects",
         ":VectorOps",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -313,8 +313,8 @@ cc_library(
         ":VectorOps",
         ":VectorToLLVM",
         ":VectorToSCF",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -385,7 +385,7 @@ cc_library(
         ":SCFDialect",
         ":StandardOps",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -446,7 +446,7 @@ cc_library(
     includes = ["include"],
     deps = [
         ":IR",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -463,7 +463,7 @@ cc_library(
     deps = [
         ":IR",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -492,7 +492,7 @@ cc_library(
         ":SideEffects",
         ":StandardOps",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -509,7 +509,7 @@ cc_library(
     deps = [
         ":Affine",
         ":IR",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -550,7 +550,7 @@ cc_library(
         ":Support",
         ":Transforms",
         ":VectorOps",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -607,7 +607,7 @@ cc_library(
     deps = [
         ":IR",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -634,7 +634,7 @@ cc_library(
         ":SideEffects",
         ":StandardOps",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -688,7 +688,7 @@ gentbl(
 
 gentbl(
     name = "MLIRShapeCanonicalizationIncGen",
-    strip_include_prefix = "include/mlir/Dialect/Shape",
+    strip_include_prefix = "include/mlir/Dialect/Shape/IR",
     tbl_outs = [
         (
             "-gen-rewriters",
@@ -727,7 +727,7 @@ cc_library(
         ":ShapeOpsIncGen",
         ":SideEffects",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -751,8 +751,41 @@ cc_library(
         ":StandardOps",
         ":Support",
         ":Transforms",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
+    ],
+)
+
+gentbl(
+    name = "ShapeTransformsPassIncGen",
+    strip_include_prefix = "include",
+    tbl_outs = [(
+        "-gen-pass-decls",
+        "include/mlir/Dialect/Shape/Transforms/Passes.h.inc",
+    )],
+    tblgen = ":mlir-tblgen",
+    td_file = "include/mlir/Dialect/Shape/Transforms/Passes.td",
+    td_srcs = [":PassBaseTdFiles"],
+)
+
+cc_library(
+    name = "ShapeTransforms",
+    srcs = glob([
+        "lib/Dialect/Shape/Transforms/*.cpp",
+        "lib/Dialect/Shape/Transforms/*.h",
+    ]),
+    hdrs = glob(["include/mlir/Dialect/Shape/Transforms/*.h"]),
+    includes = ["include"],
+    deps = [
+        #":Analysis",
+        #":ControlFlowInterfaces",
+        ":IR",
+        ":Pass",
+        ":Shape",
+        ":ShapeTransformsPassIncGen",
+        ":Support",
+        ":Transforms",
+        #"@llvm-project//llvm:Support",
     ],
 )
 
@@ -782,7 +815,7 @@ cc_library(
         ":StandardOpsIncGen",
         ":Support",
         ":ViewLikeInterface",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -815,7 +848,7 @@ cc_library(
         ":StandardOpsTransformsPassIncGen",
         ":Support",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -845,7 +878,7 @@ cc_library(
         ":Support",
         ":VectorOpsIncGen",
         ":VectorTransformPatternsIncGen",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -866,7 +899,7 @@ cc_library(
     ]),
     includes = ["include"],
     deps = [
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -893,7 +926,7 @@ cc_library(
         ":IR",
         ":ParserTokenKinds",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -946,8 +979,8 @@ cc_library(
         ":IR",
         ":LLVMAVX512IncGen",
         ":LLVMDialect",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -979,8 +1012,8 @@ cc_library(
         ":LLVMAVX512ConversionIncGen",
         ":LLVMIRModuleTranslation",
         ":Translation",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1017,11 +1050,11 @@ cc_library(
         ":LLVMOpsIncGen",
         ":SideEffects",
         ":Support",
-        "@llvm-project//llvm:asm_parser",
-        "@llvm-project//llvm:bit_reader",
-        "@llvm-project//llvm:bit_writer",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:AsmParser",
+        "@llvm-project//llvm:BitReader",
+        "@llvm-project//llvm:BitWriter",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1186,7 +1219,7 @@ cc_library(
         ":StandardOps",
         ":Support",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1218,7 +1251,7 @@ cc_library(
         ":LLVMDialect",
         ":LLVMTransforms",
         ":StandardOps",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1260,7 +1293,30 @@ cc_library(
         ":NVVMDialect",
         ":Pass",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
+    ],
+)
+
+cc_library(
+    name = "VectorToROCDL",
+    srcs = [
+        "lib/Conversion/PassDetail.h",
+        "lib/Conversion/VectorToROCDL/VectorToROCDL.cpp",
+    ],
+    hdrs = [
+        "include/mlir/Conversion/VectorToROCDL/VectorToROCDL.h",
+    ],
+    includes = ["include"],
+    deps = [
+        ":ConversionPassIncGen",
+        ":GPUDialect",
+        ":LLVMDialect",
+        ":LLVMTransforms",
+        ":Pass",
+        ":ROCDLDialect",
+        ":StandardOps",
+        ":Transforms",
+        ":VectorOps",
     ],
 )
 
@@ -1303,8 +1359,9 @@ cc_library(
         ":Transforms",
         ":VectorOps",
         ":VectorToLLVM",
+        ":VectorToROCDL",
         ":VectorToSCF",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1327,7 +1384,7 @@ cc_library(
         ":SPIRVSerialization",
         ":StandardOps",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1348,10 +1405,10 @@ cc_library(
         ":Pass",
         ":Support",
         ":TargetNVVMIR",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:nvptx_target",
-        "@llvm-project//llvm:support",
-        "@llvm-project//llvm:target_base",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:NVPTXCodeGen",
+        "@llvm-project//llvm:Support",
+        "@llvm-project//llvm:Target",
     ],
 )
 
@@ -1397,6 +1454,30 @@ cc_library(
         ":SPIRVDialect",
         ":SPIRVLowering",
         ":StandardToSPIRVConversions",
+        ":Support",
+        ":Transforms",
+    ],
+)
+
+cc_library(
+    name = "SPIRVToLLVM",
+    srcs = glob([
+        "lib/Conversion/SPIRVToLLVM/*.cpp",
+    ]) + [
+        "lib/Conversion/PassDetail.h",
+    ],
+    hdrs = glob([
+        "include/mlir/Conversion/SPIRVToLLVM/*.h",
+    ]),
+    includes = ["include"],
+    deps = [
+        ":ConversionPassIncGen",
+        ":IR",
+        ":LLVMDialect",
+        ":LLVMTransforms",
+        ":Pass",
+        ":SPIRVDialect",
+        ":StandardOps",
         ":Support",
         ":Transforms",
     ],
@@ -1474,9 +1555,9 @@ cc_library(
         ":SideEffects",
         ":StandardOps",
         ":Support",
-        "@llvm-project//llvm:asm_parser",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:AsmParser",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1546,9 +1627,9 @@ cc_library(
         ":SideEffects",
         ":StandardOps",
         ":Support",
-        "@llvm-project//llvm:asm_parser",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:AsmParser",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1794,7 +1875,7 @@ cc_library(
         ":SideEffects",
         ":Support",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1839,7 +1920,7 @@ cc_library(
         ":StandardOps",
         ":Support",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1865,7 +1946,7 @@ cc_library(
         ":StandardOps",
         ":Support",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1892,7 +1973,7 @@ cc_library(
         ":SPIRVSerializationGen",
         ":Support",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1909,7 +1990,7 @@ cc_library(
         ":SPIRVSerialization",
         ":Support",
         ":Translation",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1933,7 +2014,7 @@ cc_library(
         ":SideEffects",
         ":StandardOps",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -1970,7 +2051,7 @@ cc_library(
         ":DerivedAttributeOpInterfaceIncGen",
         ":IR",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2045,6 +2126,7 @@ cc_library(
         ":Analysis",
         ":ControlFlowInterfaces",
         ":IR",
+        ":LinalgOps",
         ":LoopLikeInterface",
         ":Pass",
         ":SCFDialect",
@@ -2053,7 +2135,7 @@ cc_library(
         ":Support",
         ":TransformUtils",
         ":TransformsPassIncGen",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2067,7 +2149,7 @@ cc_library(
     includes = ["include"],
     deps = [
         ":IR",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2089,7 +2171,7 @@ cc_library(
         ":Support",
         ":TransformUtils",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2113,7 +2195,7 @@ cc_library(
         ":StandardOps",
         ":Support",
         ":Transforms",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2160,8 +2242,8 @@ cc_library(
         ":Support",
         ":TransformUtils",
         ":Transforms",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2198,7 +2280,7 @@ cc_library(
         ":CallOpInterfacesIncGen",
         ":IR",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2235,7 +2317,7 @@ cc_library(
         ":ControlFlowInterfacesIncGen",
         ":IR",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2272,7 +2354,7 @@ cc_library(
         ":IR",
         ":InferTypeOpInterfaceIncGen",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2309,7 +2391,7 @@ cc_library(
         ":IR",
         ":SideEffectInterfacesIncGen",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2341,7 +2423,7 @@ cc_library(
         ":SCFDialect",
         ":StandardOps",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2360,7 +2442,7 @@ cc_library(
         ":IR",
         ":Parser",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2382,10 +2464,10 @@ cc_library(
         ":LLVMIRTransforms",
         ":OpenMPDialect",
         ":Support",
-        "@llvm-project//llvm:frontend_openmp",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
-        "@llvm-project//llvm:transform_utils",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:FrontendOpenMP",
+        "@llvm-project//llvm:Support",
+        "@llvm-project//llvm:TransformUtils",
     ],
 )
 
@@ -2407,9 +2489,9 @@ cc_library(
         ":Support",
         ":TargetLLVMAVX512Intr",
         ":Translation",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:ir_reader",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:IRReader",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2431,8 +2513,8 @@ cc_library(
         ":NVVMDialect",
         ":Support",
         ":Translation",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2454,8 +2536,8 @@ cc_library(
         ":ROCDLDialect",
         ":Support",
         ":Translation",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2475,17 +2557,17 @@ cc_library(
         ":Support",
         ":TargetLLVMIR",
         ":Translation",
-        "@llvm-project//llvm:bit_reader",
-        "@llvm-project//llvm:bit_writer",
-        "@llvm-project//llvm:execution_engine",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:machine_code",
-        "@llvm-project//llvm:orcjit",
-        "@llvm-project//llvm:support",
-        "@llvm-project//llvm:target_base",  # fixdeps: keep
-        "@llvm-project//llvm:transform_utils",
-        "@llvm-project//llvm:x86_target",  # fixdeps: keep
-        "@llvm-project//llvm:x86_target_disassembler",  # fixdeps: keep
+        "@llvm-project//llvm:BitReader",
+        "@llvm-project//llvm:BitWriter",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:ExecutionEngine",
+        "@llvm-project//llvm:MC",
+        "@llvm-project//llvm:OrcJIT",
+        "@llvm-project//llvm:Support",
+        "@llvm-project//llvm:Target",  # fixdeps: keep
+        "@llvm-project//llvm:TransformUtils",
+        "@llvm-project//llvm:X86CodeGen",  # fixdeps: keep
+        "@llvm-project//llvm:X86Disassembler",  # fixdeps: keep
     ],
 )
 
@@ -2499,11 +2581,11 @@ cc_library(
     ],
     includes = ["include"],
     deps = [
-        "@llvm-project//llvm:analysis",
-        "@llvm-project//llvm:ipo_transforms",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
-        "@llvm-project//llvm:target_base",
+        "@llvm-project//llvm:Analysis",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:IPO",
+        "@llvm-project//llvm:Support",
+        "@llvm-project//llvm:Target",
     ],
 )
 
@@ -2532,13 +2614,14 @@ cc_library(
         ":Pass",
         ":SCFTransforms",
         ":ShapeToStandard",
+        ":ShapeTransforms",
         ":StandardOpsTransforms",
         ":StandardToSPIRVConversions",
         ":Support",
         ":Transforms",
         ":VectorToLLVM",
         ":VectorToSCF",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
         "@llvm-project//mlir/test:TestAffine",
         "@llvm-project//mlir/test:TestDialect",
         "@llvm-project//mlir/test:TestIR",
@@ -2569,7 +2652,7 @@ cc_library(
         ":Parser",
         ":Support",
         ":Translation",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2628,8 +2711,11 @@ cc_library(
         ":SPIRVDialect",
         ":SPIRVLowering",
         ":SPIRVPassIncGen",
+        ":SPIRVToLLVM",
         ":Shape",
         ":ShapeToStandard",
+        ":ShapeTransforms",
+        ":ShapeTransformsPassIncGen",
         ":StandardOps",
         ":StandardOpsTransforms",
         ":StandardOpsTransformsPassIncGen",
@@ -2638,6 +2724,7 @@ cc_library(
         ":TransformsPassIncGen",
         ":VectorOps",
         ":VectorToLLVM",
+        ":VectorToROCDL",
         ":VectorToSCF",
     ],
 )
@@ -2665,7 +2752,7 @@ cc_library(
         ":MlirOptLib",
         ":Pass",
         ":Support",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2680,8 +2767,8 @@ cc_binary(
         ":QuantOps",
         ":SCFToGPUPass",
         ":Transforms",
-        "@llvm-project//llvm:all_targets",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:AllTargetsCodeGens",
+        "@llvm-project//llvm:Support",
         "@llvm-project//mlir/test:TestAffine",
         "@llvm-project//mlir/test:TestDialect",
         "@llvm-project//mlir/test:TestIR",
@@ -2706,9 +2793,9 @@ cc_library(
         ":Parser",
         ":Pass",
         ":Support",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:orcjit",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:OrcJIT",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2745,7 +2832,7 @@ cc_binary(
         ":AllPassesAndDialectsNoRegistration",
         ":ExecutionEngineUtils",
         ":MlirJitRunner",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2758,7 +2845,7 @@ cc_binary(
         "//third_party/gpus/cuda:cuda_headers",
         "//third_party/gpus/cuda:cuda_runtime",
         "//third_party/gpus/cuda:libcuda",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2778,7 +2865,7 @@ cc_library(
         ":StandardOps",
         ":Support",
         "//third_party/vulkan_loader",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
         "@vulkan_headers",
     ],
 )
@@ -2789,17 +2876,14 @@ cc_binary(
     linkshared = True,
     deps = [
         ":VulkanRuntime",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
 cc_binary(
     name = "mlir-cuda-runner",
     srcs = ["tools/mlir-cuda-runner/mlir-cuda-runner.cpp"],
-    data = [
-        ":tools/libcuda-runtime-wrappers.so",
-        "@llvm-project//mlir/test/mlir-cpu-runner:libmlir_runner_utils.so",
-    ],
+    data = [":tools/libcuda-runtime-wrappers.so"],
     deps = [
         ":AllPassesAndDialectsNoRegistration",
         ":ExecutionEngineUtils",
@@ -2820,7 +2904,7 @@ cc_binary(
         "//third_party/gpus/cuda:cuda_headers",
         "//third_party/gpus/cuda:cuda_runtime",
         "//third_party/gpus/cuda:libcuda",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2842,7 +2926,7 @@ cc_binary(
         ":Pass",
         ":SPIRVDialect",
         ":StandardToSPIRVConversions",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -2853,8 +2937,8 @@ cc_library(
     includes = ["include"],
     deps = [
         ":Support",
-        "@llvm-project//llvm:support",
-        "@llvm-project//llvm:tablegen",
+        "@llvm-project//llvm:Support",
+        "@llvm-project//llvm:TableGen",
     ],
 )
 
@@ -2867,9 +2951,9 @@ cc_library(
     deps = [
         ":Support",
         ":TableGen",
+        "@llvm-project//llvm:Support",
+        "@llvm-project//llvm:TableGen",
         "@llvm-project//llvm:config",
-        "@llvm-project//llvm:support",
-        "@llvm-project//llvm:tablegen",
     ],
 )
 
@@ -2887,9 +2971,9 @@ cc_binary(
         ":MlirTableGenMain",
         ":Support",
         ":TableGen",
+        "@llvm-project//llvm:Support",
+        "@llvm-project//llvm:TableGen",
         "@llvm-project//llvm:config",
-        "@llvm-project//llvm:support",
-        "@llvm-project//llvm:tablegen",
     ],
 )
 
@@ -2905,9 +2989,9 @@ cc_binary(
     deps = [
         ":IR",
         ":Support",
+        "@llvm-project//llvm:Support",
+        "@llvm-project//llvm:TableGen",
         "@llvm-project//llvm:config",
-        "@llvm-project//llvm:support",
-        "@llvm-project//llvm:tablegen",
     ],
 )
 
@@ -2964,7 +3048,7 @@ cc_library(
         ":IR",
         ":OpenMPOpsIncGen",
         ":StandardOps",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -3053,7 +3137,7 @@ cc_library(
         ":QuantPassIncGen",
         ":SideEffects",
         ":StandardOps",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -3202,8 +3286,8 @@ cc_library(
         ":Transforms",
         ":VectorToLLVM",
         ":VectorToSCF",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -3227,8 +3311,8 @@ cc_library(
         ":StandardOps",
         ":Support",
         ":Transforms",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -3281,7 +3365,7 @@ cc_library(
         ":StandardOps",
         ":Support",
         ":ViewLikeInterface",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -3343,8 +3427,8 @@ cc_library(
         ":Transforms",
         ":TransformsPassIncGen",
         ":VectorOps",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -3435,8 +3519,8 @@ cc_library(
         ":Support",
         ":Transforms",
         ":VectorOps",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 
@@ -3463,8 +3547,8 @@ cc_library(
         ":Support",
         ":Transforms",
         ":VectorOps",
-        "@llvm-project//llvm:ir",
-        "@llvm-project//llvm:support",
+        "@llvm-project//llvm:Core",
+        "@llvm-project//llvm:Support",
     ],
 )
 

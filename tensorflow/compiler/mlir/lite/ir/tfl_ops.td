@@ -127,7 +127,7 @@ class TFL_OperandsHaveSameShapesOrBroadcastableShape<
     list<int> indices, int max_bcast_rank> :
   TFL_RuntimePredOpTrait<"operands do not have the same shape or "
       "broadcastable shapes within the rank " # max_bcast_rank,
-    CPred<"TFL::IsOperandsHaveSameShapesOrBroadcastableShape("
+    CPred<"TFL::VerifyOperandsHaveSameShapesOrBroadcastableShape("
             "$_op, llvm::ArrayRef<unsigned>({" # StrJoinInt<indices>.result #
             "}), " # max_bcast_rank # ")">>;
 
@@ -212,10 +212,19 @@ class TFL_OperandIsRankedAndHasDimPred<int n, int dim> : And<[
   CPred<"$_op.getOperand(" # n # ").getType().cast<ShapedType>().getRank() > "
   # dim>]>;
 
+// Returns true if the n-th operand is ranked and has a dimension length = size
+// at the rank dim.
 class TFL_OperandDimEquals<int n, int dim, int size> : And<[
   TFL_OperandIsRankedAndHasDimPred<n, dim>,
   CPred<"$_op.getOperand(" # n # ").getType().cast<ShapedType>()"
       ".getShape()[" # dim # " ] == " # size>]>;
+
+// Returns true if the n-th operand is ranked and has a dimension length <=
+// size at the rank dim.
+class TFL_OperandDimIsAtMost<int n, int dim, int size> : And<[
+  TFL_OperandIsRankedAndHasDimPred<n, dim>,
+  CPred<"$_op.getOperand(" # n # ").getType().cast<ShapedType>()"
+      ".getShape()[" # dim # " ] <= " # size>]>;
 
 // Returns true if the n-th operand has unknown rank or at least rank m.
 class TFL_OperandHasAtleastRank<int n, int m> :
@@ -482,7 +491,8 @@ an output element, this operation computes \\(y = |x|\\).
 }
 
 def TFL_AddOp : TFL_Op<"add", [
-    TFL_OperandsHaveSameShapesOrBroadcastableShape<[0, 1], 5>,
+    TFL_RuntimePredOpTrait<"Operands do not have valid shapes",
+      CPred<"TFL::VerifyAddOpShapeConstraints(llvm::cast<AddOp>($_op))">>,
     ResultsBroadcastableShape,
     NoSideEffect,
     Commutative,
@@ -2162,7 +2172,8 @@ def TFL_MulOp : TFL_Op<"mul", [
     NoSideEffect,
     Commutative,
     BinaryOpSameElementTypeConstraint,
-    TFL_OperandsHaveSameShapesOrBroadcastableShape<[0, 1], 5>,
+    TFL_RuntimePredOpTrait<"Operands do not have valid shapes",
+      CPred<"TFL::VerifyMulOpShapeConstraints(llvm::cast<MulOp>($_op))">>,
     TFL_GpuTargetOp]> {
   let summary = "Multiplication operator";
 
@@ -2267,6 +2278,9 @@ def TFL_PadOp : TFL_Op<"pad", [
     TFL_OperandHasRankAtMost<0, 4>,
     TFL_OperandHasRank<1, 2>,
     TFL_OperandRankEquals1DimOfOperand<0, 1>,
+    PredOpTrait<"the first dim size of the padding argument must be at most 4",
+      Or<[TFL_OperandIsUnrankedPred<1>,
+          TFL_OperandDimIsAtMost<1, 0, 4>]>>,
     TFL_GpuTargetOp]> {
   let summary = "Padding operator";
 
@@ -2312,6 +2326,9 @@ def TFL_PadV2Op : TFL_Op<"padv2", [
     TFL_OperandHasRank<1, 2>,
     TFL_OperandHasRank<2, 0>,
     TFL_OperandRankEquals1DimOfOperand<0, 1>,
+    PredOpTrait<"the first dim size of the padding argument must be at most 4",
+      Or<[TFL_OperandIsUnrankedPred<1>,
+          TFL_OperandDimIsAtMost<1, 0, 4>]>>,
     PredOpTrait<"input and constant value operands must have same element type",
       TFL_TCopVTEtAreSameAt<0, 2>>]> {
   let summary = "Padding operator v2";
@@ -2817,7 +2834,8 @@ def TFL_SquareOp: TFL_Op<"square", [
 def TFL_SubOp : TFL_Op<"sub", [
     ResultsBroadcastableShape,
     BinaryOpSameElementTypeConstraint,
-    TFL_OperandsHaveSameShapesOrBroadcastableShape<[0, 1], 5>,
+    TFL_RuntimePredOpTrait<"Operands do not have valid shapes",
+      CPred<"TFL::VerifySubOpShapeConstraints(llvm::cast<SubOp>($_op))">>,
     NoSideEffect]> {
   let summary = "Subtraction operator";
 
